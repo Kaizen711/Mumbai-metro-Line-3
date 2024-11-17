@@ -1,133 +1,143 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <!-- Include external JS files -->
-    <script src="Shape_layers/Line_3_aligment.js"></script>
-    <!-- Corrected path with forward slash -->
-    <script src="Shape_layers/Line_3_Station.js"></script>
 
-    <style>
-      #map {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Include external JS files -->
+  <script src="Shape_layers/Line_3_aligment.js"></script>
+  <!-- Corrected path with forward slash -->
+  <script src="Shape_layers/Line_3_Station.js"></script>
+
+  <style>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    // Initialize the map centered on Mumbai with a zoom level of 13
+    var map = L.map("map").setView([19.076, 72.8777], 13);
+
+    // Set the tile layer for the map (OpenStreetMap)
+    var osm = L.tileLayer(
+      "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=lQ3w6qnxrDCS4gCKbmkB",
+      {
+        attribution:
+          '<a href="https://www.maptiler.com/license/maps/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
       }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <script>
-      // Initialize the map centered on Mumbai with a zoom level of 13
-      var map = L.map("map").setView([19.076, 72.8777], 13);
+    ).addTo(map);
 
-      // Set the tile layer for the map (OpenStreetMap)
-      var osm = L.tileLayer(
-        "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=lQ3w6qnxrDCS4gCKbmkB",
-        {
-          attribution:
-            '<a href="https://www.maptiler.com/license/maps/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
-        }
-      ).addTo(map);
+    // Add map layer for Jawg_Matrix
+    var Jawg_Matrix = L.tileLayer(
+      "https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token={accessToken}",
+      {
+        attribution:
+          '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b> Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        minZoom: 0,
+        maxZoom: 22,
+        accessToken: "<your accessToken>", // Replace <your accessToken> with your actual access token
+      }
+    );
 
-      // Add map layer for Jawg_Matrix
-      var Jawg_Matrix = L.tileLayer(
-        "https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token={accessToken}",
-        {
-          attribution:
-            '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b> Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          minZoom: 0,
-          maxZoom: 22,
-          accessToken: "<your accessToken>", // Replace <your accessToken> with your actual access token
-        }
-      );
+    // Add map layer for Dark Matter
+    var Dark = L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 20,
+      }
+    );
 
-      // Add map layer for Dark Matter
-      var Dark = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 20,
-        }
-      );
+    // Define the custom icon for the marker
+    var myIcon = L.icon({
+      iconUrl: "https://github.com/Kaizen711/MainDom/blob/main/Icon/ICON_5_11/Tourist%20Landmark%20.svg", // Ensure the icon URL is correct (check path)
+      iconSize: [40, 40], // Icon size
+    });
 
-      // Define the custom icon for the marker
-      var myIcon = L.icon({
-        iconUrl: "treeicon%201.svg", // Ensure the icon URL is correct (check path)
-        iconSize: [40, 40], // Icon size
+    var myIcon1 = L.icon({
+      iconUrl: "http://127.0.0.1:5500/Webhost/ICON_5_11/Museum.svg",
+      iconSize: [350, 350], // Icon size
+    });
+    var MetroStationIcon = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/8059/8059120.png", // Ensure the icon URL is correct (check path)
+        iconSize: [50, 50], // Icon size
       });
+    // Create markers for the Airport and  Gateway of India
+    //var Airport = L.marker([19.091518110457972, 72.86343037232463], {
+    //  icon: myIcon,
+    // }).addTo(map);
+    var GateWayofIndia = L.marker([18.921996, 72.834664], {
+      icon: myIcon1,
+    }).addTo(map);
 
-      var myIcon1 = L.icon({
-        iconUrl: "Icon/ICON_5_11/Museum.svg",
-        iconSize: [350, 350], // Icon size
-      });
+    // Bind popups to the markers with correct latitude and longitude
+    //Airport.bindPopup(
+    //"Airport. Latitude: " +
+    // Airport.getLatLng().lat +
+    // ", Longitude: " +
+    // Airport.getLatLng().lng
+    //).openPopup();
+    GateWayofIndia.bindPopup(
+      "Gateway of India." +  
+      "Latitude: " +
+        GateWayofIndia.getLatLng().lat +", Longitude: " +
+        GateWayofIndia.getLatLng().lng
+        ).openPopup();
 
-      // Create markers for the Airport and Gateway of India
-      var Airport = L.marker([19.091518110457972, 72.86343037232463], {
-        icon: myIcon,
-      }).addTo(map);
-      var GateWayofIndia = L.marker([18.92199691119748, 72.83466407344463], {
-        icon: myIcon1,
-      }).addTo(map);
+        // Log the GeoJSON representation of the markers
+        //console.log(Airport.toGeoJSON());
+        console.log(GateWayofIndia.toGeoJSON());
 
-      // Bind popups to the markers with correct latitude and longitude
-      Airport.bindPopup(
-        "Airport. Latitude: " +
-          Airport.getLatLng().lat +
-          ", Longitude: " +
-          Airport.getLatLng().lng
-      ).openPopup();
-      GateWayofIndia.bindPopup(
-        "Gateway of India. Latitude: " +
-          GateWayofIndia.getLatLng().lat +
-          ", Longitude: " +
-          GateWayofIndia.getLatLng().lng
-      ).openPopup();
-
-      // Log the GeoJSON representation of the markers
-      console.log(Airport.toGeoJSON());
-      console.log(GateWayofIndia.toGeoJSON());
-
-      // Set up the base layers and overlays for the map
-      var baseLayers = {
-        OpenStreetMap: osm,
+        // Set up the base layers and overlays for the map
+        var baseLayers = {
+          OpenStreetMap: osm,
         Dark: Dark,
         "Jawg Matrix": Jawg_Matrix,
       };
 
-      var overlays = {
-        "Gateway of India": GateWayofIndia,
-        Airport: Airport,
+        var overlays = {
+          "Gateway of India": GateWayofIndia,
+        //"Airport": Airport,
       };
 
-      // Add the layers control to the map
-      L.control.layers(baseLayers, overlays).addTo(map);
+        // Add the layers control to the map
+        L.control.layers(baseLayers, overlays).addTo(map);
 
-      //   L.geoJSON(Line_3_aligment).addTo(map);
-      L.geoJSON(Line_3_aligment, {
-        style: function (feature) {
-          return {
-            color: "green", // Set the line color to aqua
-            weight: 5, // Set the weight of the line (optional)
-            opacity: 0.7, // Set opacity (optional)
-          };
-        },
-      }).addTo(map);
-      L.geoJSON;
-    </script>
-  </body>
+// Adding Icon 
+L.geoJSON(Line_3_Station, {
+  pointToLayer: function (feature, latlng) {
+    // Use a custom icon for each point
+    return L.marker(latlng, { icon: MetroStationIcon });
+  },
+  onEachFeature: function (feature, layer) {
+    // Add popups with station names if available
+    if (feature.properties && feature.properties.Name) {
+      layer.bindPopup(feature.properties.Name);
+    }
+  },
+}).addTo(map);
+L.geoJSON(Line_3_aligment, {
+  style: function (feature) {
+    return {
+      color: "aqua", // Specify line color
+      weight: 4, // Specify line width
+      opacity: 0.8, // Set transparency
+    };
+  },
+}).addTo(map);
+  </script>
+</body>
+
 </html>
